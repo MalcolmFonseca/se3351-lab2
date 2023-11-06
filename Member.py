@@ -12,3 +12,6 @@ class Member:
             self.lastName = lastName
         if self.phone != None:
             self.phone = phone
+
+    def str(self):
+        return f"Name: {self.firstName} {self.lastName}, ID:{self.id},Phone: {self.phone}"
