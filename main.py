@@ -1,4 +1,4 @@
-import Member, Transaction, Item
+import Member, Transaction, Item, Inventory
 import random
 
 temp_member = Member.Member("Malcolm","Fonseca",0,543543)
@@ -8,6 +8,7 @@ temp2 = Transaction.Transaction(1,temp_member)
 temp2.add_item(Item.Item(0,'tempitem2',1,50))
 temp2.add_item(Item.Item(0,'tempitem3',1,50))
 
+MainInventory = Inventory.Inventory()
 items_list = []
 members_list = [temp_member]
 pending_transactions_list = [temp, temp2]
@@ -157,7 +158,44 @@ def item_management():
         item_management()
 
 def inventory_viewing():
-    pass
+    print("""Inventory Management
+          1. Add Item
+          2. Remove Item
+          3. Display Inventory
+          4. Return to Main Menu
+          Enter choice: """)
+
+    choice=input()
+    if choice.isnumeric():
+        choice = int(choice)
+        if 0<choice<5:
+            if len(items_list)>0:
+
+                if choice==1:
+                    ID=int(input(f"Enter ID(0-{len(items_list)-1}): "))
+                    MainInventory.add_item(items_list[ID])
+                    print("Item Added\n")
+                    inventory_viewing()
+                elif choice ==2:
+                    ID=int(input(f"Enter ID to remove(0-{len(items_list)-1}): "))
+                    MainInventory.remove_item(items_list[ID].id)
+                    print("Item removed")
+                    inventory_viewing()
+                elif choice == 3:
+                    if len(MainInventory.items)==0:
+                        print("Inventroy Empty")
+                    else:
+                        for i in MainInventory.items:
+                            print(i)
+                    inventory_viewing()
+            else:
+                print("Add Items before accessing inventory\n")
+                main_menu()
+
+        else:
+            inventory_viewing()
+    else:
+        inventory_viewing()
 
 def transaction_processing():
     print("""Transaction Processing
