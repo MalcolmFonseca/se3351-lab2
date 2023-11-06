@@ -1,15 +1,17 @@
 import Member, Transaction, Item
+import random
 
-members_list = []
-next_transaction_id = 0
-pending_transactions_list = []
 temp_member = Member.Member("Malcolm","Fonseca",0,543543)
 temp = Transaction.Transaction(0,temp_member)
 temp.add_item(Item.Item(0,'tempitem',1,50))
 temp2 = Transaction.Transaction(1,temp_member)
 temp2.add_item(Item.Item(0,'tempitem2',1,50))
 temp2.add_item(Item.Item(0,'tempitem3',1,50))
-processed_transactions_list = [temp, temp2]
+
+items_list = []
+members_list = [temp_member]
+pending_transactions_list = [temp, temp2]
+processed_transactions_list = []
 
 def main_menu():
     print("""Welcome to the Retail Store Management Program!
@@ -66,8 +68,8 @@ def member_management():
             new_member = Member.Member(first,last,len(members_list),phone)
             members_list.append(new_member)
             print("Member Added")
-            main_menu()
-
+            
+            member_management()
         #update member
         elif choice == 2:
             print("Update Member\nEnter Member Id: ")
@@ -92,14 +94,13 @@ def member_management():
             print("Enter Phone Number: ")
             phone = input()
 
-
+            member_management()
         #view purchase history
         elif choice == 3:
             print("Purchase History")
             for transaction in processed_transactions_list:
                 print(transaction.str())
             member_management()
-
 
         #view members
         elif choice == 4:
@@ -114,7 +115,46 @@ def member_management():
         member_management()
 
 def item_management():
-    pass
+    print("""Item Management
+          1. Add Item
+          2. Update Price
+          3. Update Stock
+          4. Return to Main Menu4
+          Enter choice: """)
+
+    choice=input()
+    if choice.isnumeric():
+        choice = int(choice)
+        if 0<choice<6:
+            if choice ==1:
+
+                name= input("Enter item name: ")
+                stock=int(input("Enter Stock: "))
+                price=float(input("Enter Price: "))
+                item=Item.Item(len(items_list),name,stock,price)
+                items_list.append(item)
+                print(item.str())
+                item_management()
+            elif choice == 2:
+                ID=int(input("Enter ID number: "))
+                price=float(input("Enter new price: "))
+                tempPrice=items_list[ID].price
+                items_list[ID].update_price(price)
+                print(f"Price was updated from ${tempPrice} to ${items_list[ID].price}\n")
+                item_management()
+            elif choice == 3:
+                ID=int(input("Enter ID number: "))
+                stock=int(input("Enter new Stock: "))
+                tempStock=items_list[ID].stock_num
+                items_list[ID].update_stock(stock)
+                print(f"Stock was updated from {tempStock} to {items_list[ID].stock_num}\n")
+                item_management()
+            elif choice == 4:
+                main_menu()
+        else:
+            item_management()
+    else:
+        item_management()
 
 def inventory_viewing():
     pass
@@ -141,29 +181,54 @@ def transaction_processing():
                 if member.id == id:
                     add_member = member
 
-            new_transaction = Transaction.Transaction(next_transaction_id, add_member)
-            next_transaction_id += 1
+            new_transaction = Transaction.Transaction(random.randint(0,1000), add_member)
 
             #add items to transaction
             print("Number of Items to be Added: ")
             num = int(input())
-            new_items = []
             for i in range(0,num):
-                print(f"Enter Item #{i} ID: ")
-                
+                #check if item exists
+                exists = False
+                while(exists == False):
+                    print(f"Enter Item #{i} ID: ")
+                    id = int(input())
+                    for item in items_list:
+                        if item.id == id:
+                            new_transaction.add_item(item)
+                            exists = True
 
-            pending_transactions_list.append()
+            pending_transactions_list.append(new_transaction)
             print("Transaction Added")
 
             transaction_processing()
         #remove transaction
         elif choice == 2:
+            print("Remove Transaction\nEnter Transaction ID: ")
+            id = int(input())
+            for i,transaction in enumerate(pending_transactions_list):
+                if transaction.id == id:
+                    pending_transactions_list.pop(i)
+            print("Transaction Removed")
+
             transaction_processing()
         #view pending transactions
         elif choice == 3:
+            print("Pending Transactions:")
+
+            for transaction in pending_transactions_list:
+                print(transaction.str())
+
             transaction_processing()
         #process transaction
         elif choice == 4:
+            print("Process Transaction\nEnter Transaction ID: ")
+            id = int(input())
+            for i,transaction in enumerate(pending_transactions_list):
+                if transaction.id == id:
+                    processed_transactions_list.append(transaction)
+                    pending_transactions_list.pop(i)
+            print("Transaction Processed")
+
             transaction_processing()
         elif choice == 5:
             main_menu()

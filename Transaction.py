@@ -22,7 +22,7 @@ class Transaction():
         return price
     
     def str(self):
-        return_string = f"Transaction #{self.id}:\nMember: {self.member.firstName} {self.member.lastName}\nItems:"
+        return_string = f"Transaction #{self.id}:    Total: {self.calc_total()}\nMember: {self.member.firstName} {self.member.lastName}\nItems:"
 
         for item in self.items:
             return_string += f"\n   {item.name}   ${item.price}"

@@ -10,3 +10,6 @@ class Item():
 
     def update_stock(self,new_stock):
         self.stock = new_stock
+
+    def str(self):
+        return f"ID: {self.id}, Name: {self.name}, Stock: {self.stock_num}, Price: {self.price}"
