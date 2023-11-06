@@ -1,5 +1,6 @@
 class Transaction():
-    def __init__(self,member):
+    def __init__(self,id,member):
+        self.id = id
         self.member = member
         self.items = []
 
@@ -19,3 +20,11 @@ class Transaction():
             price += item.price
 
         return price
+    
+    def str(self):
+        return_string = f"Transaction #{self.id}:\nMember: {self.member.firstName} {self.member.lastName}\nItems:"
+
+        for item in self.items:
+            return_string += f"\n   {item.name}   ${item.price}"
+
+        return return_string
